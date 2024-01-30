@@ -10,13 +10,13 @@ const VozOrdenes = ({ updatePosition }) => {
     border: 'none',
     color: 'white',
     padding: '15px 32px',
-    textAlign: 'center', 
+    textAlign: 'center',
     textDecoration: 'none',
     display: 'inline-block',
-    fontSize: '16px', 
-    margin: '4px 2px', 
-    cursor: 'pointer', 
-    borderRadius: '8px', 
+    fontSize: '16px',
+    margin: '4px 2px',
+    cursor: 'pointer',
+    borderRadius: '8px',
   };
 
   const commands = [
@@ -25,6 +25,7 @@ const VozOrdenes = ({ updatePosition }) => {
       callback: () => {
         setMessage('Moviendo hacia la izquierda');
         updatePosition('left');
+        resetTranscript();
       },
     },
     {
@@ -32,6 +33,7 @@ const VozOrdenes = ({ updatePosition }) => {
       callback: () => {
         setMessage('Moviendo hacia la derecha');
         updatePosition('right');
+        resetTranscript();
       },
     },
     {
@@ -39,6 +41,7 @@ const VozOrdenes = ({ updatePosition }) => {
       callback: () => {
         setMessage('Moviendo hacia arriba');
         updatePosition('up');
+        resetTranscript();
       },
     },
     {
@@ -46,15 +49,16 @@ const VozOrdenes = ({ updatePosition }) => {
       callback: () => {
         setMessage('Moviendo hacia abajo');
         updatePosition('down');
+        resetTranscript();
       },
     },
   ];
 
-  const { transcript, browserSupportsSpeechRecognition } = useSpeechRecognition({ commands });
+  const { transcript, resetTranscript, browserSupportsSpeechRecognition } = useSpeechRecognition({ commands });
 
   useEffect(() => {
     if (browserSupportsSpeechRecognition) {
-      SpeechRecognition.startListening({continuous:true});
+      SpeechRecognition.startListening({ continuous: true });
     }
   }, [browserSupportsSpeechRecognition]);
 
@@ -62,17 +66,23 @@ const VozOrdenes = ({ updatePosition }) => {
     return <div>La detección de voz no es compatible en este navegador.</div>;
   }
 
+  const handleClick = () => {
+    resetTranscript();
+    setMessage('');
+  };
+
   return (
     <div>
-      <button onClick={SpeechRecognition.startListening}style={buttonStyle}>Dar Instrucción</button>
+      <button onClick={handleClick} style={buttonStyle}>
+        Dar Instrucción
+      </button>
+
       <div className="instrucciones">
-      <p>Mensaje: {transcript}</p>
-      <p>Respuesta: {message}</p>
+        <p>Mensaje: {transcript}</p>
+        <p>Respuesta: {message}</p>
       </div>
     </div>
   );
 };
-
-
 
 export default VozOrdenes;
