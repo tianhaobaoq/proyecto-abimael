@@ -54,7 +54,7 @@ const VozOrdenes = ({ updatePosition }) => {
 
   useEffect(() => {
     if (browserSupportsSpeechRecognition) {
-      SpeechRecognition.startListening();
+      SpeechRecognition.startListening({continuous:true});
     }
   }, [browserSupportsSpeechRecognition]);
 
